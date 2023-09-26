@@ -1,0 +1,54 @@
+version: '3'
+services:
+  yuoj-backend-gateway:
+    container_name: yuoj-backend-gateway
+    build:
+      context: ./yuoj-backend-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8101:8101"
+    networks:
+      - mynetwork
+
+  yuoj-backend-user-service:
+    container_name: yuoj-backend-user-service
+    build:
+      context: ./yuoj-backend-user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8102:8102"
+    networks:
+      - mynetwork
+    depends_on:
+      - yuoj-backend-gateway
+
+  yuoj-backend-question-service:
+    container_name: yuoj-backend-question-service
+    build:
+      context: ./yuoj-backend-question-service
+      dockerfile: Dockerfile
+    ports:
+      - "8103:8103"
+    networks:
+      - mynetwork
+    depends_on:
+      - yuoj-backend-user-service
+      - yuoj-backend-gateway
+
+  yuoj-backend-judge-service:
+    container_name: yuoj-backend-judge-service
+    build:
+      context: ./yuoj-backend-judge-service
+      dockerfile: Dockerfile
+    ports:
+      - "8104:8104"
+    networks:
+      - mynetwork
+    depends_on:
+      - yuoj-backend-user-service
+      - yuoj-backend-question-service
+      - yuoj-backend-gateway
+
+# 网络，不定义的话就是默认网络
+networks:
+  mynetwork:
