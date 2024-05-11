@@ -1,12 +1,14 @@
 # 数据库初始化
-# @author <a href="https://github.com/liyupi">程序员鱼皮</a>
-# @from <a href="https://yupi.icu">编程导航知识星球</a>
 
 -- 创建库
-create database if not exists yuoj;
+create database if not exists oj;
 
 -- 切换库
-use yuoj;
+use oj;
+
+
+
+
 
 -- 用户表
 create table if not exists user
@@ -62,44 +64,42 @@ create table if not exists question_submit
     isDelete   tinyint  default 0                 not null comment '是否删除',
     index idx_questionId (questionId),
     index idx_userId (userId)
-) comment '题目提交';
+) comment '题目提交' collate = utf8mb4_unicode_ci;
 
--- 帖子表
-create table if not exists post
+create table if not exists user_comments
 (
-    id         bigint auto_increment comment 'id' primary key,
-    title      varchar(512)                       null comment '标题',
-    content    text                               null comment '内容',
-    tags       varchar(1024)                      null comment '标签列表（json 数组）',
-    thumbNum   int      default 0                 not null comment '点赞数',
-    favourNum  int      default 0                 not null comment '收藏数',
-    userId     bigint                             not null comment '创建用户 id',
-    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete   tinyint  default 0                 not null comment '是否删除',
-    index idx_userId (userId)
-) comment '帖子' collate = utf8mb4_unicode_ci;
+    id               bigint auto_increment comment '评论ID' primary key ,
+    userId           bigint not null COMMENT '用户ID（外键，引用 user 表的 id）',
+    questionId       bigint not null COMMENT '题目ID（外键，引用 题目 表的 id）',
+    commentContent   text   not null COMMENT '评论内容',
+    createTime       datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime       datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete        tinyint default 0 not null comment '是否删除',
 
--- 帖子点赞表（硬删除）
-create table if not exists post_thumb
-(
-    id         bigint auto_increment comment 'id' primary key,
-    postId     bigint                             not null comment '帖子 id',
-    userId     bigint                             not null comment '创建用户 id',
-    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    index idx_postId (postId),
-    index idx_userId (userId)
-) comment '帖子点赞';
+    -- 喜欢和收藏计数字段
+    likesCount       int default 0 not null comment '喜欢数量',
+    collectsCount    INT DEFAULT 0 not null comment '收藏数量',
 
--- 帖子收藏表（硬删除）
-create table if not exists post_favour
-(
-    id         bigint auto_increment comment 'id' primary key,
-    postId     bigint                             not null comment '帖子 id',
-    userId     bigint                             not null comment '创建用户 id',
-    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    index idx_postId (postId),
-    index idx_userId (userId)
-) comment '帖子收藏';
+    index idx_questionId (questionId)
+) comment '用户评论' collate = utf8mb4_unicode_ci;
+
+
+create table if not exists comment_like (
+                                            id bigint not null auto_increment comment 'id',
+                                            commentId bigint not null comment '评论id',
+                                            userId bigint not null comment '用户id',
+                                            isLike tinyint(1) not null default 0,
+                                            primary key (id),
+                                            foreign key (commentId) references user_comments(id),
+                                            foreign key (userId) references user(id), -- 假设用户表是user
+                                            createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+                                            updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+                                            isDelete   tinyint  default 0                 not null comment '是否删除'
+)comment '评论点赞表'collate = utf8mb4_unicode_ci;
+# -- 添加外键约束，关联到 user 表
+# ALTER TABLE user_comments
+#     ADD CONSTRAINT fk_user_comments_user
+#         FOREIGN KEY (userId)
+#             REFERENCES user(id)
+#             ON DELETE CASCADE;
+

@@ -1,54 +1,84 @@
 version: '3'
 services:
-  yuoj-backend-gateway:
-    container_name: yuoj-backend-gateway
+  backend-gateway:
+    container_name: backend-gateway
     build:
-      context: ./yuoj-backend-gateway
+      context: ./backend-gateway
       dockerfile: Dockerfile
     ports:
       - "8101:8101"
     networks:
       - mynetwork
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
-  yuoj-backend-user-service:
-    container_name: yuoj-backend-user-service
+
+  backend-user-service:
+    container_name: backend-user-service
     build:
-      context: ./yuoj-backend-user-service
+      context: ./backend-user-service
       dockerfile: Dockerfile
     ports:
       - "8102:8102"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-gateway
+      - backend-gateway
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
-  yuoj-backend-question-service:
-    container_name: yuoj-backend-question-service
+  backend-question-service:
+    container_name: backend-question-service
     build:
-      context: ./yuoj-backend-question-service
+      context: ./backend-question-service
       dockerfile: Dockerfile
     ports:
       - "8103:8103"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-user-service
-      - yuoj-backend-gateway
+      - backend-user-service
+      - backend-gateway
+    deploy:
+      resources:
+        limits:
+          memory: 600M
 
-  yuoj-backend-judge-service:
-    container_name: yuoj-backend-judge-service
+  backend-judge-service:
+    container_name: backend-judge-service
     build:
-      context: ./yuoj-backend-judge-service
+      context: ./backend-judge-service
       dockerfile: Dockerfile
     ports:
       - "8104:8104"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-user-service
-      - yuoj-backend-question-service
-      - yuoj-backend-gateway
+      - backend-user-service
+      - backend-question-service
+      - backend-gateway
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
-# 网络，不定义的话就是默认网络
+  sandbox-code:
+    container_name: sandbox-code
+    build:
+      context: ./sandbox-code
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - mynetwork
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+
 networks:
   mynetwork:

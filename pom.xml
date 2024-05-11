@@ -2,20 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.yupi</groupId>
-    <artifactId>yuoj-backend-microservice</artifactId>
+    <groupId>com.shang</groupId>
+    <artifactId>shang-backend-microservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>yuoj-backend-microservice</name>
-    <description>鱼 OJ 项目</description>
+    <name>backend-microservice</name>
+    <description> OJ 项目</description>
     <modules>
-        <module>yuoj-backend-common</module>
-        <module>yuoj-backend-model</module>
-        <module>yuoj-backend-gateway</module>
-        <module>yuoj-backend-service-client</module>
-        <module>yuoj-backend-question-service</module>
-        <module>yuoj-backend-user-service</module>
-        <module>yuoj-backend-judge-service</module>
+        <module>backend-common</module>
+        <module>backend-model</module>
+        <module>backend-gateway</module>
+        <module>backend-service-client</module>
+        <module>backend-question-service</module>
+        <module>backend-user-service</module>
+        <module>backend-judge-service</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

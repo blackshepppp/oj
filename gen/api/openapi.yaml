@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  description: yuoj_backend_microservice API
+  title: yuoj_backend_microservice API
+  version: 1.0.0
+servers:
+- url: https://yuoj_backend_microservice
+paths:
+  /upload:
+    post:
+      operationId: imgUpload
+      parameters:
+      - explode: true
+        in: query
+        name: file
+        required: true
+        schema:
+          format: binary
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+          description: OK
+      summary: POST upload
+      x-accepts: '*/*'
+components:
+  schemas:
+    BaseResponse:
+      example:
+        code: 0
+        message: message
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      type: object
+

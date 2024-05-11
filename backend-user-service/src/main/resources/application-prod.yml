@@ -1,0 +1,43 @@
+
+spring:
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/oj
+    username: root
+    password: 123456
+  # Redis 配置
+  redis:
+    database: 1
+    host: redis
+    port: 6379
+    timeout: 5000
+
+
+  servlet:
+    multipart:
+      # 大小限制
+      max-file-size: 10MB
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    password: guest
+    username: guest
+minio:
+  endpoint: http://minio:9000 #minio地址
+  accessKey: minioadmin #账号
+  secretKey: minioadmin #密码
+  bucketName: img #桶名称
+
+server:
+  servlet:
+    context-path: /api/user
+    session:
+      cookie:
+        max-age: 2592000
+        path: /api
